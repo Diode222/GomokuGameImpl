@@ -8,17 +8,19 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"os"
+	"strconv"
 )
 
 func main() {
 	listenIP := conf.LISTEN_IP
-	// Do not know firsthand or backhand, so do not know port, should be dispatch by referee
-	//servicePort, err := strconv.Atoi(os.Getenv("PORT"))
-	//if err != nil {
-	//	log.Println(fmt.Sprintf("Wrong port param, port: %s", os.Getenv("PORT")))
-	//	return
-	//}
-	servicePort := 10001
+	// Do not know firsthand or backhand, so do not know port, should be dispatch by backend
+	servicePort, err := strconv.Atoi(os.Getenv("PORT"))
+	if err != nil {
+		log.Println(fmt.Sprintf("Wrong port param, port: %s", os.Getenv("PORT")))
+		return
+	}
+	//servicePort := 10001
 
 	grpcServer := grpc.NewServer()
 	defer grpcServer.GracefulStop()
