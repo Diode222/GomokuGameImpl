@@ -5,10 +5,11 @@ import (
 	"errors"
 	"github.com/Diode222/GomokuGameImpl/conf"
 	pb "github.com/Diode222/GomokuGameImpl/proto"
+	"github.com/sirupsen/logrus"
 	"sync"
 )
 
-type gomokuGameImplServer struct {}
+type gomokuGameImplServer struct{}
 
 var server *gomokuGameImplServer
 var once sync.Once
@@ -32,11 +33,9 @@ func (s *gomokuGameImplServer) Init(ctx context.Context, isFirst *pb.IsFirst) (*
 	}
 	// TODO init
 
-
-
 	status := true
 	return &pb.Status{
-		Status:               &status,
+		Status: &status,
 	}, nil
 }
 
@@ -53,15 +52,21 @@ func (s *gomokuGameImplServer) MakePiece(ctx context.Context, board *pb.Board) (
 			pieceType := conf.MY_PIECE_TYPE
 			piecePositionX := chessPosition.GetPosition().GetX()
 			piecePositionY := chessPosition.GetPosition().GetY()
+			logrus.WithFields(logrus.Fields{
+				"Type": pieceType,
+				"X":    piecePositionX,
+				"Y":    piecePositionY,
+			}).Info("Piece make.")
 			return &pb.PiecePosition{
-				Type:                 &pieceType,
-				Position:             &pb.Position{
-					X:                    &piecePositionX,
-					Y:                    &piecePositionY,
+				Type: &pieceType,
+				Position: &pb.Position{
+					X: &piecePositionX,
+					Y: &piecePositionY,
 				},
 			}, nil
 		}
 	}
 
+	logrus.Warn("what's wrong of referee???")
 	return nil, errors.New("what's wrong of referee???")
 }
