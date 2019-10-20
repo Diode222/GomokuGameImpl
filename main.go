@@ -18,10 +18,13 @@ func main() {
 	listenIP := conf.LISTEN_IP
 	// Log addr should be setted by backend, player1 and player2's log files are different
 	logFileAddr := os.Getenv("LOG_VOLUME_ADDR")
+	// FIXME test
+	//logFileAddr = "/home/diode/player2_log"
 	initLogHook(logFileAddr)
 
 	// Do not know firsthand or backhand, so do not know port, should be setted by backend
 	// Port is fixed: firstHand---10001, backHand---10002
+	// FIXME test
 	servicePort, err := strconv.Atoi(os.Getenv("PORT"))
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
@@ -29,7 +32,7 @@ func main() {
 		}).Info("Wrong port env.")
 		return
 	}
-	//servicePort := 10001
+	//servicePort := 10002
 
 	grpcServer := grpc.NewServer()
 	defer grpcServer.GracefulStop()
@@ -45,7 +48,7 @@ func main() {
 	} else {
 		logrus.WithFields(logrus.Fields{
 			"listenAddr": listenAddr,
-		}).Info("listening failed in pod.")
+		}).Info("listening in k8s pod.")
 	}
 	defer listener.Close()
 
